@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rock Paper Scissors</title>
+    <meta name="description" content="Rock Paper Scissors Console Game">
+    <meta name="author" content="Dustin Christianson">
+</head>
+<body>
+    <script>
+
+        let computerChoiceNumber;
+        let computerChoice;
+        let playerChoiceRaw;
+        let playerChoice;
+
+        let playerWin;
+        let drawState = false;
+
+        let playerScore = 0;
+        let computerScore = 0;
+
+        //playerPrompt();
+
+        function playerPrompt(){
+        playerChoiceRaw = prompt("Please enter your move (rock, paper, or scissors):");
+        }
+
+        function playerChoiceFix(playerChoiceRaw){
+            playerChoice = playerChoiceRaw.toLowerCase();
+            console.log("You chose: " + playerChoice);
+            
+                return playerChoice;
+            }
+             
+            
+        
+
+        function computerPlay(){
+            computerChoiceNumber = Math.floor(Math.random() * 10);
+            if (computerChoiceNumber < 3){
+                computerChoice="rock";
+            } else if (computerChoiceNumber >=3 && computerChoiceNumber < 6){
+                computerChoice="paper";
+            } else if (computerChoiceNumber >= 6){
+                computerChoice="scissors";
+            }
+            console.log("Computer chose: " + computerChoice);
+            return computerChoice;
+        }
+
+        function playRound(playerChoice, computerChoice){
+                if ((playerChoice == "rock") && (computerChoice == "paper")){
+                    playerWin = false;
+                    drawState = false;
+                } else if ((playerChoice == "paper") && (computerChoice == "scissors")){
+                    playerWin = false;
+                    drawState = false;
+                } else if ((playerChoice == "scissors") && (computerChoice == "rock")){
+                    playerWin = false;
+                    drawState = false;
+                } else if (playerChoice == computerChoice){
+                    playerWin = undefined;
+                    drawState = true;
+                } else {
+                    playerWin = true;
+                    drawState = false;
+                }
+            //console.log("Player Win " + playerWin);
+            //console.log("Is a Draw? " + drawState);
+        }
+
+        function logResults(playerChoice, computerChoice, drawState){
+                if(drawState == true){
+                    console.log("It's a draw");
+                } else if(playerWin == true){
+                    console.log("You win this round! " + playerChoice + " beats " + computerChoice);
+                } else if (playerWin == false){
+                    console.log("You lose this round! " + playerChoice + " loses to " + computerChoice);
+                }
+        }
+
+        function addPoints(){
+            if(playerWin == true){
+                playerScore++;
+            } else if(playerWin == false){
+                computerScore++;
+            }
+            
+        }
+
+        function logScore(playerScore, computerScore){
+            console.log("Player: " + playerScore + " Computer: " + computerScore);
+        }
+        //computerPlay();
+        //playerChoiceFix(playerChoiceRaw);
+
+        function gameWinner(){
+            console.log("Final scores: Player: " + playerScore + " vs. Computer: " + computerScore);
+            if (playerScore > computerScore){
+                console.log("You win.  After five intense rounds.");
+            } else if (computerScore > playerScore){
+                console.log("You lose, after a pitiful showing.");
+            } else if (playerScore == computerScore){
+                console.log("After five rounds, it's a tie!");
+            }
+        }
+
+        
+        function game(){
+            gameRound();
+            gameRound();
+            gameRound();
+            gameRound();
+            gameRound();
+            gameWinner();
+        }
+        
+        //gameRound();
+
+        game();
+
+        function gameRound(){
+            playerPrompt();
+            playerChoiceFix(playerChoiceRaw);
+            computerPlay();
+            playRound(playerChoice, computerChoice);
+            logResults(playerChoice, computerChoice, drawState);
+            addPoints();
+            logScore(playerScore, computerScore);
+
+        }
+        //playRound(playerChoice, computerChoice);
+        //logResults(playerChoice, computerChoice, drawState);
+
+    </script>
+</body>
+</html>
