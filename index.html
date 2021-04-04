@@ -6,8 +6,136 @@
     <title>Rock Paper Scissors</title>
     <meta name="description" content="Rock Paper Scissors Console Game">
     <meta name="author" content="Dustin Christianson">
+
+    <style>
+        .topCenter{
+            margin: auto;
+            width: 500px;
+            text-align: center;
+        }
+
+        .midCenter{
+            margin-top: auto;
+            margin-right: auto;
+            margin-left: auto;
+            margin-bottom: 50px;
+
+
+
+            width: 750px;
+            text-align: center;
+        }
+
+        #computerPromptDiv{
+            margin-bottom: 10px;
+        }
+
+        .playerButtonDiv{
+            margin: auto;
+            width: 750px;
+            text-align: center;
+        }
+        .playerChoiceButton{
+            width: 150px;
+            height: 150px;
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-bottom: 25px;
+        }
+
+        .playerChoiceButton:hover{
+            transform: scale(1.3, 1.3);
+        }
+
+        .computerSelectionDiv{
+            margin-top: 50px;
+            margin-right: auto;
+            margin-left: auto;
+            margin-bottom: 25px;
+            width: 750px;
+            text-align: center;
+            
+        }
+
+        .computerChoiceButton{
+            margin-top: 25px;
+            display: inline-block;
+            width: 150px;
+            
+            text-align: center;
+            
+            margin-left: 10px;
+            margin-right: 10px;
+            border-style: solid 1px;
+            padding-top: 70px;
+            padding-bottom: 70px;
+            background-color: lightgrey;
+        }
+
+        .computerSelected{
+            background-color: rgb(214, 214, 55);
+            transform: scale(1.3, 1.3);
+        }
+
+        .playerSelected{
+            background-color:sandybrown;
+            transform: scale(1.3, 1.3);
+        }
+
+        .footer{
+            text-align:center;
+            font-size:xx-large;
+        }
+
+        .scoreDiv{
+            text-align:start;
+            padding-left: 150px;
+            font-size: larger;
+            font-family:fantasy;
+        }
+
+        .winnerBorder{
+            border-style:solid 2px;
+            border-color:green;
+        }
+
+        .loserBorder{
+            border-style:solid 2px;
+            border-color: red;
+        }
+
+    </style>
 </head>
 <body>
+
+    <div id="header" class="topCenter"><h1>Rock Paper Scissors V 0.2</h1></div>
+    <div id="playerPromptDiv" class="topCenter"><h3>Choose your Fighter:</h3></div>
+    <div id=playerWindow> <div id="playerScoreDiv" class="scoreDiv">Player Score: 0</div>
+    <div id="playerSelectionDiv" class="playerButtonDiv">
+        <button id="playerChoiceRock" class="playerChoiceButton" onclick="playerChoiceRock()">ROCK</button>
+        <button id="playerChoicePaper" class="playerChoiceButton" onclick="playerChoicePaper()">PAPER</button>
+        <button id="playerChoiceScissors" class="playerChoiceButton" onclick="playerChoiceScissors()">SCISSORS</button>
+    </div>
+    </div>
+
+
+    <hr>
+    <div id="computerPromptDiv" class="midCenter"><h3>Your opponent:</h3></div>
+    <div id="computerWindow"><div id="computerScoreDiv" class="scoreDiv">Computer Score: 0</div> 
+    <div id="computerSelectionDiv" class="computerButtonDiv midCenter">
+        <div id="computerChoiceRock" class="computerChoiceButton">ROCK</div>
+        <div id="computerChoicePaper" class="computerChoiceButton">PAPER</div>
+        <div id="computerChoiceScissors" class="computerChoiceButton">SCISSORS</div>
+    
+    </div>
+    </div>
+    <hr>
+
+    <div id="resultsDisplayDiv" class="footer">
+            Race to Five Wins!
+    </div>
+
+
     <script>
 
         let computerChoiceNumber;
@@ -21,54 +149,140 @@
         let playerScore = 0;
         let computerScore = 0;
 
-        //playerPrompt();
+        var grandChamp;
 
-        function playerPrompt(){
-        playerChoiceRaw = prompt("Please enter your move (rock, paper, or scissors):");
+        var computerChoiceRock = document.getElementById("computerChoiceRock");
+        var computerChoicePaper = document.getElementById("computerChoicePaper");
+        var computerChoiceScissors = document.getElementById("computerChoiceScissors");
+        
+        var playerChoiceRockCtx = document.getElementById("playerChoiceRock");
+        var playerChoicePaperCtx = document.getElementById("playerChoicePaper");
+        var playerChoiceScissorsCtx = document.getElementById("playerChoiceScissors");
+
+        var resultsDisplay = document.getElementById("resultsDisplayDiv");
+
+        var playerScoreDisplay = document.getElementById("playerScoreDiv");
+        var computerScoreDisplay = document.getElementById("computerScoreDiv");
+
+        
+        function playerChoiceRock(){
+                
+                playerChoice = "rock";
+                playerChoiceRockCtx.classList.add("playerSelected");
+                
+                computerPlay();
+                evalMatch(playerChoice, computerChoice);
+        }
+        function playerChoicePaper(){
+                
+                playerChoice = "paper";
+                playerChoicePaperCtx.classList.add("playerSelected");
+                computerPlay();
+                evalMatch(playerChoice, computerChoice);
+        }
+        function playerChoiceScissors(){
+                
+                playerChoice = "scissors";
+                playerChoiceScissorsCtx.classList.add("playerSelected");
+                computerPlay();
+                evalMatch(playerChoice, computerChoice);
         }
 
-        function playerChoiceFix(playerChoiceRaw){
-            playerChoice = playerChoiceRaw.toLowerCase();
-            console.log("You chose: " + playerChoice);
+
+
+        function resetRound(){
+            playerChoiceRockCtx.classList.remove("playerSelected");
+            playerChoicePaperCtx.classList.remove("playerSelected");
+            playerChoiceScissorsCtx.classList.remove("playerSelected");
+            computerChoiceRock.classList.remove("computerSelected");
+            computerChoicePaper.classList.remove("computerSelected");
+            computerChoiceScissors.classList.remove("computerSelected");
+            resultsDisplay.innerHTML = "";
             
-                return playerChoice;
-            }
-             
+        }
+
+        function evalMatch(playerChoice, computerChoice){
+            if ((playerChoice == "rock") && (computerChoice == "paper")){
+                    playerWin = false;
+                    drawState = false;
+                    resultsDisplay.innerHTML = "<h2> You Lose </h2>"
+                } else if ((playerChoice == "paper") && (computerChoice == "scissors")){
+                    playerWin = false;
+                    drawState = false;
+                    resultsDisplay.innerHTML = "<h2> You Lose </h2>"
+                } else if ((playerChoice == "scissors") && (computerChoice == "rock")){
+                    playerWin = false;
+                    drawState = false;
+                    resultsDisplay.innerHTML = "<h2> You Lose </h2>"
+                } else if (playerChoice == computerChoice){
+                    playerWin = undefined;
+                    drawState = true;
+                    resultsDisplay.innerHTML = "<h2> It's a Draw </h2>"
+                } else {
+                    playerWin = true;
+                    drawState = false;
+                    resultsDisplay.innerHTML = "<h2> You Win </h2>";
+                }
+            logResults(playerChoice, computerChoice, drawState);
+            addPoints();
+            window.setTimeout(resetRound, 1000);
+            gameWinCheck(playerScore, computerScore);
             
-        
+                
+
+        }
 
         function computerPlay(){
+                
             computerChoiceNumber = Math.floor(Math.random() * 10);
             if (computerChoiceNumber < 3){
                 computerChoice="rock";
+                computerChoiceRock.classList.add("computerSelected");
             } else if (computerChoiceNumber >=3 && computerChoiceNumber < 6){
                 computerChoice="paper";
+                computerChoicePaper.classList.add("computerSelected");
             } else if (computerChoiceNumber >= 6){
                 computerChoice="scissors";
+                computerChoiceScissors.classList.add("computerSelected")
             }
             console.log("Computer chose: " + computerChoice);
             return computerChoice;
         }
 
-        function playRound(playerChoice, computerChoice){
-                if ((playerChoice == "rock") && (computerChoice == "paper")){
-                    playerWin = false;
-                    drawState = false;
-                } else if ((playerChoice == "paper") && (computerChoice == "scissors")){
-                    playerWin = false;
-                    drawState = false;
-                } else if ((playerChoice == "scissors") && (computerChoice == "rock")){
-                    playerWin = false;
-                    drawState = false;
-                } else if (playerChoice == computerChoice){
-                    playerWin = undefined;
-                    drawState = true;
-                } else {
-                    playerWin = true;
-                    drawState = false;
+        function gameWinCheck(playerScore, computerScore){
+                if (playerScore == 5){
+                    alert("You win the game!");
+                    resetGame();
+                    //grandChamp = "Player";
+                    //resultsDisplay.innerHtml = "<h2> You are the Grand Champion </h2>";
+                }if (computerScore == 5){
+                    alert("You lose the game!")
+                    resetGame();
+                    //grandChamp = "Computer";
+                    //results.Display.innerHTML = "<h2> Computer is the Grand Champion </h2>";
                 }
-            //console.log("Player Win " + playerWin);
-            //console.log("Is a Draw? " + drawState);
+                
+        }
+
+        function resetGame(){
+            playerScore = 0;
+            computerScore = 0;
+            newGame();
+        }
+
+        function newGame(){
+            resetRound();
+            resetScore();
+            resultsDisplay.innerHTML = "<h2> Race to Five Wins </h2>"
+        }
+
+        function resetScore(){
+            scoreUpdate(playerScore, computerScore);
+        }
+
+        function scoreUpdate(playerScore, computerScore){
+            playerScoreDisplay.innerHTML=" Player Score: " + playerScore;
+            computerScoreDisplay.innerHTML=" Computer Score: " + computerScore;
         }
 
         function logResults(playerChoice, computerChoice, drawState){
@@ -87,52 +301,15 @@
             } else if(playerWin == false){
                 computerScore++;
             }
+            scoreUpdate(playerScore, computerScore);
             
         }
 
         function logScore(playerScore, computerScore){
             console.log("Player: " + playerScore + " Computer: " + computerScore);
         }
-        //computerPlay();
-        //playerChoiceFix(playerChoiceRaw);
 
-        function gameWinner(){
-            console.log("Final scores: Player: " + playerScore + " vs. Computer: " + computerScore);
-            if (playerScore > computerScore){
-                console.log("You win.  After five intense rounds.");
-            } else if (computerScore > playerScore){
-                console.log("You lose, after a pitiful showing.");
-            } else if (playerScore == computerScore){
-                console.log("After five rounds, it's a tie!");
-            }
-        }
 
-        
-        function game(){
-            gameRound();
-            gameRound();
-            gameRound();
-            gameRound();
-            gameRound();
-            gameWinner();
-        }
-        
-        //gameRound();
-
-        game();
-
-        function gameRound(){
-            playerPrompt();
-            playerChoiceFix(playerChoiceRaw);
-            computerPlay();
-            playRound(playerChoice, computerChoice);
-            logResults(playerChoice, computerChoice, drawState);
-            addPoints();
-            logScore(playerScore, computerScore);
-
-        }
-        //playRound(playerChoice, computerChoice);
-        //logResults(playerChoice, computerChoice, drawState);
 
     </script>
 </body>
