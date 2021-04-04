@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Rock Paper Scissors</title>
-    <meta name="description" content="Rock Paper Scissors Console Game">
+    <meta name="description" content="Rock Paper Scissors UI Game">
     <meta name="author" content="Dustin Christianson">
 
     <style>
@@ -19,9 +19,6 @@
             margin-right: auto;
             margin-left: auto;
             margin-bottom: 50px;
-
-
-
             width: 750px;
             text-align: center;
         }
@@ -61,9 +58,7 @@
             margin-top: 25px;
             display: inline-block;
             width: 150px;
-            
             text-align: center;
-            
             margin-left: 10px;
             margin-right: 10px;
             border-style: solid 1px;
@@ -117,8 +112,6 @@
         <button id="playerChoiceScissors" class="playerChoiceButton" onclick="playerChoiceScissors()">SCISSORS</button>
     </div>
     </div>
-
-
     <hr>
     <div id="computerPromptDiv" class="midCenter"><h3>Your opponent:</h3></div>
     <div id="computerWindow"><div id="computerScoreDiv" class="scoreDiv">Computer Score: 0</div> 
@@ -126,70 +119,58 @@
         <div id="computerChoiceRock" class="computerChoiceButton">ROCK</div>
         <div id="computerChoicePaper" class="computerChoiceButton">PAPER</div>
         <div id="computerChoiceScissors" class="computerChoiceButton">SCISSORS</div>
-    
     </div>
     </div>
     <hr>
-
     <div id="resultsDisplayDiv" class="footer">
             Race to Five Wins!
     </div>
 
 
     <script>
-
+        //initialize basic game variables
         let computerChoiceNumber;
         let computerChoice;
         let playerChoiceRaw;
         let playerChoice;
-
         let playerWin;
         let drawState = false;
-
         let playerScore = 0;
         let computerScore = 0;
-
         var grandChamp;
-
+        
+        //initialize variables for DOM manipulation
         var computerChoiceRock = document.getElementById("computerChoiceRock");
         var computerChoicePaper = document.getElementById("computerChoicePaper");
         var computerChoiceScissors = document.getElementById("computerChoiceScissors");
-        
         var playerChoiceRockCtx = document.getElementById("playerChoiceRock");
         var playerChoicePaperCtx = document.getElementById("playerChoicePaper");
         var playerChoiceScissorsCtx = document.getElementById("playerChoiceScissors");
-
         var resultsDisplay = document.getElementById("resultsDisplayDiv");
-
         var playerScoreDisplay = document.getElementById("playerScoreDiv");
         var computerScoreDisplay = document.getElementById("computerScoreDiv");
 
-        
+        //function attached to each player choice button sets player choice and then runs match (not optimal)
         function playerChoiceRock(){
-                
                 playerChoice = "rock";
                 playerChoiceRockCtx.classList.add("playerSelected");
-                
                 computerPlay();
                 evalMatch(playerChoice, computerChoice);
         }
         function playerChoicePaper(){
-                
                 playerChoice = "paper";
                 playerChoicePaperCtx.classList.add("playerSelected");
                 computerPlay();
                 evalMatch(playerChoice, computerChoice);
         }
         function playerChoiceScissors(){
-                
                 playerChoice = "scissors";
                 playerChoiceScissorsCtx.classList.add("playerSelected");
                 computerPlay();
                 evalMatch(playerChoice, computerChoice);
         }
 
-
-
+        //resets all DOM selections/indicators between each round of play
         function resetRound(){
             playerChoiceRockCtx.classList.remove("playerSelected");
             playerChoicePaperCtx.classList.remove("playerSelected");
@@ -198,9 +179,9 @@
             computerChoicePaper.classList.remove("computerSelected");
             computerChoiceScissors.classList.remove("computerSelected");
             resultsDisplay.innerHTML = "";
-            
         }
 
+        //evaluates outcome of game based on player choice vs. computer choice, triggered by playerChoice
         function evalMatch(playerChoice, computerChoice){
             if ((playerChoice == "rock") && (computerChoice == "paper")){
                     playerWin = false;
@@ -227,13 +208,10 @@
             addPoints();
             window.setTimeout(resetRound, 1000);
             gameWinCheck(playerScore, computerScore);
-            
-                
-
         }
 
+        //determines computer play choice based on random number (scissors has slightly higher chance of being picked), triggered inside playerchoice onclick function (not optimal)
         function computerPlay(){
-                
             computerChoiceNumber = Math.floor(Math.random() * 10);
             if (computerChoiceNumber < 3){
                 computerChoice="rock";
@@ -248,7 +226,7 @@
             console.log("Computer chose: " + computerChoice);
             return computerChoice;
         }
-
+        //checks if either player or computer has five points, triggers end of game.
         function gameWinCheck(playerScore, computerScore){
                 if (playerScore == 5){
                     alert("You win the game!");
@@ -263,23 +241,23 @@
                 }
                 
         }
-
+        //resets gameplay for next race to 5.
         function resetGame(){
             playerScore = 0;
             computerScore = 0;
             newGame();
         }
-
+        //ditto
         function newGame(){
             resetRound();
             resetScore();
             resultsDisplay.innerHTML = "<h2> Race to Five Wins </h2>"
         }
-
+        //ditto, resets scores to zero
         function resetScore(){
             scoreUpdate(playerScore, computerScore);
         }
-
+        //scoreupdate function adds points based on match eval
         function scoreUpdate(playerScore, computerScore){
             playerScoreDisplay.innerHTML=" Player Score: " + playerScore;
             computerScoreDisplay.innerHTML=" Computer Score: " + computerScore;
@@ -304,10 +282,10 @@
             scoreUpdate(playerScore, computerScore);
             
         }
-
-        function logScore(playerScore, computerScore){
-            console.log("Player: " + playerScore + " Computer: " + computerScore);
-        }
+        //legacy function for logging score to console.
+        //function logScore(playerScore, computerScore){
+        //    console.log("Player: " + playerScore + " Computer: " + computerScore);
+        //}
 
 
 
