@@ -86,7 +86,7 @@
             text-align:start;
             padding-left: 150px;
             font-size: larger;
-            font-family:fantasy;
+        
         }
 
         .winnerBorder{
@@ -154,23 +154,20 @@
         function playerChoiceRock(){
                 playerChoice = "rock";
                 playerChoiceRockCtx.classList.add("playerSelected");
-                computerPlay();
-                evalMatch(playerChoice, computerChoice);
+                completeRound();
         }
         function playerChoicePaper(){
                 playerChoice = "paper";
                 playerChoicePaperCtx.classList.add("playerSelected");
-                computerPlay();
-                evalMatch(playerChoice, computerChoice);
+                completeRound();
         }
         function playerChoiceScissors(){
                 playerChoice = "scissors";
                 playerChoiceScissorsCtx.classList.add("playerSelected");
-                computerPlay();
-                evalMatch(playerChoice, computerChoice);
+                completeRound();
         }
 
-        //resets all DOM selections/indicators between each round of play
+        //resets all DOM selections/indicators between each round of play, either on timer or on new selection.
         function resetRound(){
             playerChoiceRockCtx.classList.remove("playerSelected");
             playerChoicePaperCtx.classList.remove("playerSelected");
@@ -181,33 +178,44 @@
             resultsDisplay.innerHTML = "";
         }
 
+        function completeRound(){
+            computerPlay();
+            evalMatch(playerChoice, computerChoice);
+        }
+
         //evaluates outcome of game based on player choice vs. computer choice, triggered by playerChoice
         function evalMatch(playerChoice, computerChoice){
-            if ((playerChoice == "rock") && (computerChoice == "paper")){
-                    playerWin = false;
-                    drawState = false;
-                    resultsDisplay.innerHTML = "<h2> You Lose </h2>"
-                } else if ((playerChoice == "paper") && (computerChoice == "scissors")){
-                    playerWin = false;
-                    drawState = false;
-                    resultsDisplay.innerHTML = "<h2> You Lose </h2>"
-                } else if ((playerChoice == "scissors") && (computerChoice == "rock")){
-                    playerWin = false;
-                    drawState = false;
-                    resultsDisplay.innerHTML = "<h2> You Lose </h2>"
+            if  ((playerChoice == "rock") && (computerChoice == "paper") || 
+                ((playerChoice == "paper") && (computerChoice == "scissors")) || 
+                ((playerChoice == "scissors") && (computerChoice == "rock")))    {
+                    playerLossRound();
                 } else if (playerChoice == computerChoice){
-                    playerWin = undefined;
-                    drawState = true;
-                    resultsDisplay.innerHTML = "<h2> It's a Draw </h2>"
+                    callDrawRound();
                 } else {
-                    playerWin = true;
-                    drawState = false;
-                    resultsDisplay.innerHTML = "<h2> You Win </h2>";
+                    playerWinRound();
                 }
             logResults(playerChoice, computerChoice, drawState);
             addPoints();
             window.setTimeout(resetRound, 1000);
             gameWinCheck(playerScore, computerScore);
+        }
+
+        function playerLossRound(){
+            playerWin = false;
+            drawState = false;
+            resultsDisplay.innerHTML = "<h2> You Lose </h2>"
+        }
+
+        function callDrawRound(){
+            playerWin = undefined;
+            drawState = true;
+            resultsDisplay.innerHTML = "<h2> It's a Draw </h2>"
+        }
+
+        function playerWinRound(){
+            playerWin = true;
+            drawState = false;
+            resultsDisplay.innerHTML = "<h2> You Win </h2>";
         }
 
         //determines computer play choice based on random number (scissors has slightly higher chance of being picked), triggered inside playerchoice onclick function (not optimal)
@@ -231,13 +239,11 @@
                 if (playerScore == 5){
                     alert("You win the game!");
                     resetGame();
-                    //grandChamp = "Player";
-                    //resultsDisplay.innerHtml = "<h2> You are the Grand Champion </h2>";
+                    
                 }if (computerScore == 5){
                     alert("You lose the game!")
                     resetGame();
-                    //grandChamp = "Computer";
-                    //results.Display.innerHTML = "<h2> Computer is the Grand Champion </h2>";
+                    
                 }
                 
         }
